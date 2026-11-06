@@ -1,42 +1,58 @@
+import { api } from '../lib/apiClient'
+
 export interface TipoAudiencia {
   id: string
   descripcion: string
+  duracion_default: number | null
+  descanso_minutos_default: number | null
+  bloqueable: boolean
+  habilitado: boolean
 }
 
-let tipos: TipoAudiencia[] = [
-  { id: '1', descripcion: 'Preliminar' },
-  { id: '2', descripcion: 'De debate' },
-  { id: '3', descripcion: 'Lectura de sentencia' },
-]
+let tipos: TipoAudiencia[] = []
 
-let siguienteId = 4
-
-export function getAll(): TipoAudiencia[] {
-  return [...tipos]
+export async function getAll(idFuero?: string | null): Promise<TipoAudiencia[]> {
+  const params = new URLSearchParams()
+  params.set('per_page', '200')
+  if (idFuero) {
+    params.set('id_fuero', idFuero)
+  }
+  const res = await api.get<{ count: number; data: TipoAudiencia[] }>(
+    `/tipos-audiencia/?${params.toString()}`,
+  )
+  return res.data
 }
 
-export function getOne(id: string): TipoAudiencia | undefined {
-  return tipos.find((tipo) => tipo.id === id)
+export async function getOne(id: string): Promise<TipoAudiencia> {
+  const tipo = (await getAll()).find((item) => item.id === id)
+  if (!tipo) {
+    throw new Error('No existe ese tipo de audiencia.')
+  }
+  return tipo
 }
 
-export function createOne(descripcion: string): TipoAudiencia {
-  const nuevo: TipoAudiencia = { id: String(siguienteId), descripcion }
-  siguienteId += 1
-  tipos = [...tipos, nuevo]
-  return nuevo
+export async function createOne(descripcion: string, idFuero: string): Promise<TipoAudiencia> {
+  return api.post<TipoAudiencia>('/tipos-audiencia/', {
+    descripcion,
+    bloqueable: true,
+    descanso_minutos_default: 0,
+    duracion_default: 0,
+    habilitado: true,
+    id_fuero: idFuero,
+  })
 }
 
-export function updateOne(id: string, descripcion: string): TipoAudiencia | undefined {
+export async function updateOne(id: string, descripcion: string): Promise<TipoAudiencia> {
   const actual = tipos.find((tipo) => tipo.id === id)
   if (!actual) {
-    return undefined
+    throw new Error('No existe ese tipo de audiencia.')
   }
   const actualizado: TipoAudiencia = { ...actual, descripcion }
   tipos = tipos.map((tipo) => (tipo.id === id ? actualizado : tipo))
   return actualizado
 }
 
-export function deleteOne(id: string): void {
+export async function deleteOne(id: string): Promise<void> {
   tipos = tipos.filter((tipo) => tipo.id !== id)
 }
 

@@ -1,3 +1,7 @@
+import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router'
 import { validate } from '../data/tiposAudiencia'
@@ -27,16 +31,27 @@ export default function TipoAudienciaForm({
 
   return (
     <section>
-      <h1>{titulo}</h1>
+      <Typography variant="h5" component="h1" gutterBottom>
+        {titulo}
+      </Typography>
       <form onSubmit={guardar}>
-        <label>
-          Descripción{' '}
-          <input value={descripcion} onChange={(event) => setDescripcion(event.target.value)} />
-        </label>
-        {error ? <p>{error}</p> : null}
-        <p>
-          <button type="submit">Guardar</button> <Link to="/tipos-audiencia">Volver</Link>
-        </p>
+        <Stack spacing={2} sx={{ maxWidth: 480 }}>
+          <TextField
+            label="Descripción"
+            value={descripcion}
+            onChange={(event) => setDescripcion(event.target.value)}
+            error={Boolean(error)}
+            helperText={error}
+          />
+          <Stack direction="row" spacing={1}>
+            <Button type="submit" variant="contained">
+              Guardar
+            </Button>
+            <Button component={Link} to="/tipos-audiencia">
+              Volver
+            </Button>
+          </Stack>
+        </Stack>
       </form>
     </section>
   )

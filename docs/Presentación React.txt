@@ -1,0 +1,29 @@
+Presentación React
+
+1. Modelo mental
+La UI es función del estado. No se toca el DOM: se cambia el estado y React re-renderiza. Componentes como funciones, props de entrada, estado inmutable.
+
+2. JS moderno
+Destructuring, spread, arrow functions, map/filter, módulos, ?. y ??. Ojo con {count && <X/>} cuando count es 0.
+
+3. Async/await
+Promises, fetch con try/catch y chequeo de res.ok, Promise.all para llamadas en paralelo.
+
+4. Hooks
+useState, useEffect (y cuándo no usarlo), useRef, useMemo/useCallback solo cuando hay motivo real, custom hooks. Reglas: nunca dentro de if o loops.
+
+5. Render
+Qué dispara un re-render, key en listas, closures con estado viejo, StrictMode ejecutando efectos dos veces en dev.
+
+6. TanStack Query
+Estado del servidor vs. del cliente. useQuery, cache, useMutation + invalidateQueries. Reemplaza el combo useEffect + useState + fetch.
+
+7. React Router
+Rutas, <Link>, useParams, useNavigate, layouts con <Outlet />, rutas protegidas.
+
+8. Zustand
+Prop drilling de más de 2-3 niveles es señal de mover el estado. Antes de un store: subir estado, composición, Context. Leer con selectores. Los datos de la API van en TanStack Query, no acá.
+
+9. Revisar código generado por IA
+Dependencias mal puestas en efectos, useEffect innecesarios, fetch manual, mutaciones de estado. DevTools de React y de Query. TypeScript básico para leer props tipadas.
+
